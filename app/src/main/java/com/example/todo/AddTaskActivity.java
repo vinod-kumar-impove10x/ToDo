@@ -13,8 +13,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class AddTaskActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+public class AddTaskActivity extends AppCompatActivity {
 
 
     @Override
@@ -28,8 +31,30 @@ public class AddTaskActivity extends AppCompatActivity {
             String title = titleTxt.getText().toString();
             EditText messageTxt = findViewById(R.id.description_txt);
             String message = messageTxt.getText().toString();
-            Toast.makeText(this, title + message, Toast.LENGTH_SHORT).show();
+            createTask(title, message);
         });
 
+    }
+
+    public void createTask(String title, String message) {
+        TaskList taskList = new TaskList();
+        taskList.titleTxt = title;
+        taskList.messageTxt = message;
+
+        TodoApi todoApi = new TodoApi();
+        TodoService service = todoApi.createTodoService();
+        Call<TaskList> call = service.createTask(taskList);
+        call.enqueue(new Callback<TaskList>() {
+            @Override
+            public void onResponse(Call<TaskList> call, Response<TaskList> response) {
+                Toast.makeText(AddTaskActivity.this, "Successfully added task", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<TaskList> call, Throwable t) {
+                Toast.makeText(AddTaskActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

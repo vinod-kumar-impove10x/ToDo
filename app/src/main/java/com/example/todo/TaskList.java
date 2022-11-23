@@ -1,6 +1,13 @@
 package com.example.todo;
 
+import com.google.gson.annotations.SerializedName;
+
 public class TaskList {
-    public String titleTxt;
-    public String messageTxt;
+        @SerializedName("_id")
+        public String id;
+        @SerializedName("task")
+        public String titleTxt;
+        @SerializedName("description")
+        public String messageTxt;
+
 }
